@@ -1,0 +1,38 @@
+{
+  "name": "osmos-contrib-mongodb",
+  "version": "1.0.0",
+  "description": "Mongodb driver for Osmos",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/limianwang/osmos-contrib-mongodb.git"
+  },
+  "keywords": [
+    "mongodb",
+    "osmos"
+  ],
+  "author": "Limian Wang <limian.wang@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/limianwang/osmos-contrib-mongodb/issues"
+  },
+  "homepage": "https://github.com/limianwang/osmos-contrib-mongodb",
+  "dependencies": {
+    "async": "^0.9.0",
+    "bluebird": "^2.9.24",
+    "mongodb": "^2.0.25",
+    "native-or-bluebird": "^1.2.0"
+  },
+  "devDependencies": {
+    "chai": "^2.2.0",
+    "istanbul": "^0.3.13",
+    "mocha": "^2.2.1",
+    "mongodb": "^2.0.25"
+  }
+}
