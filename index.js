@@ -6,7 +6,7 @@ var mongo = require('mongodb');
 
 var ObjectID = mongo.ObjectID;
 
-var objectDiff = require('./lib/objectdiff');
+var objectDiff = require('./lib/diff');
 
 function mongoKey(key) {
   if (!key || key.constructor.name == 'ObjectID')
