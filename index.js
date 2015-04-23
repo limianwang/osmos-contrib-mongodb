@@ -66,6 +66,31 @@ Driver.prototype.post = function(document, data, done) {
   }).nodeify(done);
 };
 
+Driver.prototype.update = function(document, set, unset, done) {
+  var self = this;
+
+  return new Promise(function(resolve, reject) {
+    if(!document.primaryKey) {
+      reject(new Error('You cannot update a document without a primaryKey'));
+    }
+
+    var payload = {
+      '$set': set,
+      '$unset': unset
+    };
+
+    self.database.collection(document.model.bucket).update({
+      _id: mongoKey(document._id)
+    }, payload, { upsert: true}, function(err) {
+      if(err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  }).nodeify(done);
+};
+
 Driver.prototype.put = function(document, data, done) {
   var self = this;
 
