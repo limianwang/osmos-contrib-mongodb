@@ -31,6 +31,7 @@ Driver.prototype.create = function(model, done) {
 
 Driver.prototype.get = function(model, key, done) {
   var self = this;
+
   return new Promise(function(resolve, reject) {
     var spec = {
       _id: mongoKey(key)
@@ -54,6 +55,7 @@ Driver.prototype.get = function(model, key, done) {
 Driver.prototype.post = function(document, data, done) {
   data._id = mongoKey(data._id);
   var self = this;
+
   return new Promise(function(resolve, reject) {
     return self.database.collection(document.model.bucket).insert(data, function(err, docs) {
       if(err) {
@@ -66,7 +68,7 @@ Driver.prototype.post = function(document, data, done) {
   }).nodeify(done);
 };
 
-Driver.prototype.update = function(document, set, unset, done) {
+Driver.prototype.put = function(document, set, unset, done) {
   var self = this;
 
   return new Promise(function(resolve, reject) {
@@ -81,77 +83,6 @@ Driver.prototype.update = function(document, set, unset, done) {
 
     self.database.collection(document.model.bucket).update({
       _id: mongoKey(document._id)
-    }, payload, { upsert: true}, function(err) {
-      if(err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  }).nodeify(done);
-};
-
-Driver.prototype.put = function(document, data, done) {
-  var self = this;
-
-  return new Promise(function(resolve, reject) {
-    if(!(document.model.schema.primaryKey && document.primaryKey)) {
-      return reject(new Error('You cannot put a document without a primary key'));
-    }
-
-    if(document.__originalData__[document.model.schema.primaryKey] === undefined) {
-      return self.post(document, data).then(function() {
-        resolve();
-      }).catch(function(err) {
-        resolve(err);
-      });
-    }
-
-    var changes = objectDiff.diff(document.__originalData__, data);
-
-    if(changes.changed === 'equal') {
-      // nothing to update
-      return resolve();
-    }
-
-    var diff = {};
-    var set = {};
-    var unset = {};
-
-    Object.keys(changes.value).forEach(function(k) {
-      var v = data[k];
-
-      if(changes.value[k].changed !== 'equal') {
-        diff[k] = v;
-
-        if(v === undefined) {
-          unset[k] = '';
-        } else {
-          set[k] = v;
-        }
-      }
-    });
-
-    var primaryKey;
-
-    if(diff[document.schema.primaryKey]) {
-      primaryKey = document.__originalData__[document.schema.primaryKey];
-    } else {
-      primaryKey = document.primaryKey;
-    }
-
-    var payload = {};
-
-    if (Object.keys(set).length) {
-      payload.$set = set;
-    }
-
-    if (Object.keys(unset).length) {
-      payload.$unset = unset;
-    }
-
-    return self.database.collection(document.model.bucket).update({
-      _id: mongoKey(primaryKey)
     }, payload, { upsert: true }, function(err) {
       if(err) {
         reject(err);
