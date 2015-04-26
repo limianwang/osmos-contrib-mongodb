@@ -5,8 +5,10 @@ mongodb Driver for Osmos
 # Usage
 
 ```
+npm install mongodb --save
+
 npm install osmo-lite --save
-npm install osmos-contrib-mongodb
+npm install osmos-contrib-mongodb --save
 ```
 
 ```js
