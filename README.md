@@ -3,14 +3,18 @@
 [![Build Status](https://travis-ci.org/limianwang/osmos-contrib-mongodb.svg?branch=master)](https://travis-ci.org/limianwang/osmos-contrib-mongodb)
 [![Coverage Status](https://coveralls.io/repos/limianwang/osmos-contrib-mongodb/badge.svg?branch=master)](https://coveralls.io/r/limianwang/osmos-contrib-mongodb?branch=master)
 
-mongodb Driver for Osmos
+mongodb Driver for osmos-lite.
+
+This Driver is the split out version from the 1.x version of Osmos.
 
 # Usage
+
+This package will work for osmos-lite@2.x. (As currently osmos-lite is in beta, you will have to install directly from github)
 
 ```
 npm install mongodb --save
 
-npm install osmo-lite --save
+npm install git://github.com/limianwang/osmos-lite#2.x --save
 npm install osmos-contrib-mongodb --save
 ```
 
