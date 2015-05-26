@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/limianwang/osmos-contrib-mongodb.svg?branch=master)](https://travis-ci.org/limianwang/osmos-contrib-mongodb)
 [![Coverage Status](https://coveralls.io/repos/limianwang/osmos-contrib-mongodb/badge.svg?branch=master)](https://coveralls.io/r/limianwang/osmos-contrib-mongodb?branch=master)
+[![npm](https://img.shields.io/npm/v/osmos-contrib-mongodb.svg?style=flat-square)](https://www.npmjs.com/package/osmos-contrib-mongodb)
+[![npm](https://img.shields.io/npm/dm/osmos-contrib-mongodb.svg?style=flat-square)](https://www.npmjs.com/package/osmos-contrib-mongodb)
 
 mongodb Driver for osmos-lite.
 
