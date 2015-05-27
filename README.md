@@ -11,18 +11,18 @@ This Driver is the split out version from the 1.x version of Osmos.
 
 # Usage
 
-This package will work for osmos-lite@2.x. (As currently osmos-lite is in beta, you will have to install directly from github)
+This package will work for osmos-lite. (As currently osmos-lite is in beta, you will have to install directly from github)
 
 ```
 npm install mongodb --save
 
-npm install git://github.com/limianwang/osmos-lite#2.x --save
+npm install git://github.com/limianwang/osmos-lite#master --save
 npm install osmos-contrib-mongodb --save
 ```
 
 ```js
 var osmos = require('osmos-lite');
-var Driver = require('osmos-contrib-mongodb');
+var OsmosMongoDriver = require('osmos-contrib-mongodb');
 var mongodb = require('mongodb');
 
 mongodb.MongoClient.connect(url, options, function(err, db) {
@@ -30,7 +30,7 @@ mongodb.MongoClient.connect(url, options, function(err, db) {
     return done(err);
   }
 
-  var driver =  new osmosMongo(db);
+  var driver = new OsmosMongoDriver(db);
 
   osmos.drivers.register('mongodb', driver);
 
