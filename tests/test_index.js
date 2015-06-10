@@ -1,5 +1,6 @@
 'use strict';
 
+var sinon = require('sinon');
 var chai = require('chai');
 var expect = chai.expect;
 
@@ -14,7 +15,6 @@ describe('mongodb driver', function() {
   before(function(done) {
     mongodb.MongoClient.connect('mongodb://localhost:27017/osmos', {}, function(err, db) {
       if(err) {
-        console.log(err);
         done(err);
       } else {
         driver = new Driver(db);
