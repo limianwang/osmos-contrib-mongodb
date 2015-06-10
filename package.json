@@ -29,7 +29,7 @@
     "native-or-bluebird": "^1.2.0"
   },
   "devDependencies": {
-    "chai": "^2.3.0",
+    "chai": "^3.0.0",
     "istanbul": "^0.3.14",
     "mocha": "^2.2.5"
   }
