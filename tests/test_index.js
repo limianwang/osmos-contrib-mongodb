@@ -10,9 +10,13 @@ var Driver = require('../');
 chai.config.includeStack = true;
 
 describe('mongodb driver', function() {
-  var driver;
+  var driver, model;
 
   before(function(done) {
+    model = {
+      bucket: 'mock'
+    };
+
     mongodb.MongoClient.connect('mongodb://localhost:27017/osmos', {}, function(err, db) {
       if(err) {
         done(err);
@@ -43,6 +47,16 @@ describe('mongodb driver', function() {
             .to.be.an('object')
             .to.be.empty;
 
+          done();
+        });
+    });
+
+    it('should be able to find an empty object', function(done) {
+      driver
+        .get(model, 'test')
+        .then(function(doc) {
+          expect(doc)
+            .to.not.exist;
           done();
         });
     });
