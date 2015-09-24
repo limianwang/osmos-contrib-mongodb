@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * module dependencies
+ */
+
 var Promise = require('native-or-bluebird');
 var async = require('async');
 var mongo = require('mongodb');
@@ -17,17 +21,19 @@ function mongoKey(key) {
   }
 }
 
-var Driver = function OsmosMongoDriver(database) {
+/**
+ * module exports
+ */
+
+var Driver = module.exports = function OsmosMongoDriver(database) {
   this.database = database;
 };
 
-Driver.prototype.create = function(model, done) {
-  return new Promise(function(resolve) {
-    return resolve({});
-  }).nodeify(done);
+Driver.prototype.create = function(model) {
+  return Promise.resolve({});
 };
 
-Driver.prototype.get = function(model, key, done) {
+Driver.prototype.get = function(model, key) {
   var self = this;
 
   return new Promise(function(resolve, reject) {
@@ -47,10 +53,10 @@ Driver.prototype.get = function(model, key, done) {
         resolve(doc);
       }
     });
-  }).nodeify(done);
+  });
 };
 
-Driver.prototype.post = function(document, data, done) {
+Driver.prototype.post = function(document, data) {
   data._id = mongoKey(data._id);
   var self = this;
 
@@ -63,10 +69,10 @@ Driver.prototype.post = function(document, data, done) {
         resolve();
       }
     });
-  }).nodeify(done);
+  });
 };
 
-Driver.prototype.put = function(document, set, unset, done) {
+Driver.prototype.put = function(document, set, unset) {
   var self = this;
 
   return new Promise(function(resolve, reject) {
@@ -88,10 +94,10 @@ Driver.prototype.put = function(document, set, unset, done) {
         resolve();
       }
     });
-  }).nodeify(done);
+  });
 };
 
-Driver.prototype.del = function(model, key, done) {
+Driver.prototype.del = function(model, key) {
   if (key.constructor.name === 'Object') {
     key = key[Object.keys(key)[0]];
   }
@@ -108,10 +114,10 @@ Driver.prototype.del = function(model, key, done) {
         resolve();
       }
     });
-  }).nodeify(done);
+  });
 };
 
-Driver.prototype.count = function(model, spec, done) {
+Driver.prototype.count = function(model, spec) {
   var self = this;
   return new Promise(function(resolve, reject) {
     return self.database.collection(model.bucket).find(spec).count(function(err, count) {
@@ -121,10 +127,10 @@ Driver.prototype.count = function(model, spec, done) {
         resolve(count);
       }
     });
-  }).nodeify(done);
+  });
 };
 
-Driver.prototype.findOne = function(model, spec, done) {
+Driver.prototype.findOne = function(model, spec) {
   var self = this;
   return new Promise(function(resolve, reject) {
     return self.database.collection(model.bucket).findOne(spec, function(err, doc) {
@@ -134,29 +140,30 @@ Driver.prototype.findOne = function(model, spec, done) {
         resolve(doc);
       }
     });
-  }).nodeify(done);
+  });
 };
 
 Driver.prototype.find = function(model, spec, done) {
   var self = this;
+
   return new Promise(function(resolve, reject) {
     return self.database.collection(model.bucket).find(spec, function(err, rs) {
       if(err) {
-        reject(err);
-      } else {
-        rs.toArray(function(err, docs) {
-          if(err) {
-            reject(err);
-          } else {
-            resolve(docs);
-          }
-        });
+        return reject(err);
       }
+
+      return rs.toArray(function(err, docs) {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(docs);
+        }
+      });
     });
-  }).nodeify(done);
+  });
 };
 
-Driver.prototype.findLimit = function findLimit(model, spec, start, limit, done) {
+Driver.prototype.findLimit = function findLimit(model, spec, start, limit) {
   var self = this;
   var searchSpec = spec.$query ? spec.$query : spec;
 
@@ -173,13 +180,11 @@ Driver.prototype.findLimit = function findLimit(model, spec, start, limit, done)
         });
       }
     }, function(err, result) {
-      if(err) {
-        reject(err);
-      } else {
-        resolve(result);
+      if (err) {
+        return reject(err);
       }
-    });
-  }).nodeify(done);
-};
 
-module.exports = Driver;
+      return resolve(result);
+    });
+  });
+};
