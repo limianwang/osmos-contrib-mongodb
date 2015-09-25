@@ -48,15 +48,14 @@ Driver.prototype.get = function(model, key) {
 
     return self.database.collection(model.bucket).findOne(spec, function(err, doc) {
       if(err) {
-        reject(err);
-      } else {
-
-        if(doc) {
-          doc._id = doc._id.toHexString ? doc._id.toHexString() : doc._id;
-        }
-
-        resolve(doc);
+        return reject(err);
       }
+
+      if(doc) {
+        doc._id = doc._id.toHexString ? doc._id.toHexString() : doc._id;
+      }
+
+      return resolve(doc);
     });
   });
 };
@@ -68,11 +67,11 @@ Driver.prototype.post = function(document, data) {
   return new Promise(function(resolve, reject) {
     return self.database.collection(document.model.bucket).insert(data, function(err, docs) {
       if(err) {
-        reject(err);
-      } else {
-        document.primaryKey = docs[0]._id.toHexString ? docs[0]._id.toHexString() : docs[0]._id;
-        resolve();
+        return reject(err);
       }
+
+      document.primaryKey = docs[0]._id.toHexString ? docs[0]._id.toHexString() : docs[0]._id;
+      return resolve();
     });
   });
 };
@@ -82,7 +81,7 @@ Driver.prototype.put = function(document, set, unset) {
 
   return new Promise(function(resolve, reject) {
     if(!document.primaryKey) {
-      reject(new Error('You cannot update a document without a primaryKey'));
+      return reject(new Error('You cannot update a document without a primaryKey'));
     }
 
     var payload = {
@@ -94,10 +93,10 @@ Driver.prototype.put = function(document, set, unset) {
       _id: mongoKey(document._id)
     }, payload, { upsert: true }, function(err) {
       if(err) {
-        reject(err);
-      } else {
-        resolve();
+        return reject(err);
       }
+
+      return resolve();
     });
   });
 };
@@ -114,10 +113,10 @@ Driver.prototype.del = function(model, key) {
       _id: mongoKey(key)
     }, function(err) {
       if(err) {
-        reject(err);
-      } else {
-        resolve();
+        return reject(err);
       }
+
+      return resolve();
     });
   });
 };
@@ -127,10 +126,10 @@ Driver.prototype.count = function(model, spec) {
   return new Promise(function(resolve, reject) {
     return self.database.collection(model.bucket).find(spec).count(function(err, count) {
       if(err) {
-        reject(err);
-      } else {
-        resolve(count);
+        return reject(err);
       }
+
+      return resolve(count);
     });
   });
 };
@@ -140,10 +139,10 @@ Driver.prototype.findOne = function(model, spec) {
   return new Promise(function(resolve, reject) {
     return self.database.collection(model.bucket).findOne(spec, function(err, doc) {
       if(err) {
-        reject(err);
-      } else {
-        resolve(doc);
+        return reject(err);
       }
+
+      return resolve(doc);
     });
   });
 };
@@ -159,10 +158,10 @@ Driver.prototype.find = function(model, spec, done) {
 
       return rs.toArray(function(err, docs) {
         if(err) {
-          reject(err);
-        } else {
-          resolve(docs);
+          return reject(err);
         }
+
+        return resolve(docs);
       });
     });
   });
@@ -179,7 +178,9 @@ Driver.prototype.findLimit = function findLimit(model, spec, start, limit) {
       },
       docs: function(cb) {
         self.database.collection(model.bucket).find(spec).skip(start).limit(limit, function(err, rs) {
-          if (err) return cb(err);
+          if (err) {
+            return cb(err);
+          }
 
           rs.toArray(cb);
         });

@@ -13,7 +13,7 @@ This Driver is the split out version from the 1.x version of Osmos.
 
 This package will work for osmos-lite. (As currently osmos-lite is in beta, you will have to install directly from github)
 
-```
+```bash
 npm install mongodb --save
 
 npm install git://github.com/limianwang/osmos-lite#master --save
