@@ -11,14 +11,19 @@ var mongo = require('mongodb');
 var ObjectID = mongo.ObjectID;
 
 function mongoKey(key) {
-  if (!key || key.constructor.name == 'ObjectID')
-    return key;
-
-  try {
-    return new ObjectID(key);
-  } catch (e) {
+  if (!key || key.constructor.name === 'ObjectID') {
     return key;
   }
+
+  var id;
+
+  try {
+    id = new ObjectID(key);
+  } catch (e) {
+    id = key;
+  }
+
+  return id;
 }
 
 /**
