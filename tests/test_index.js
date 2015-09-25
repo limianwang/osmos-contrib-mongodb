@@ -61,4 +61,64 @@ describe('mongodb driver', function() {
         });
     });
   });
+
+  describe('when getting data from mongodb', function() {
+
+    describe('when an error occurred', function() {
+
+      it('should catch error', function(done) {
+        sinon.stub(driver.database, 'collection', function(bucket) {
+          return {
+            findOne: function(arg, callback) {
+              process.nextTick(function() {
+                callback(new Error('fake'));
+              });
+            }
+          };
+        });
+
+        driver.get(model, 'key').catch(function(err) {
+          expect(err).to.exist;
+          expect(err).to.have.property('message').to.be.equal('fake');
+
+          driver.database.collection.restore();
+
+          done();
+        });
+      });
+
+    });
+
+    describe('when document is found', function() {
+
+      it('should be able to transform id to hexstring', function(done) {
+
+        sinon.stub(driver.database, 'collection', function(bucket) {
+          return {
+            findOne: function(spec, callback) {
+              process.nextTick(function() {
+                callback(null, {
+                  _id: {
+                    toHexString: function() {
+                      return spec._id;
+                    }
+                  }
+                })
+              });
+            }
+          };
+        });
+
+        driver.get(model, 'key').then(function(doc) {
+
+          expect(doc).to.have.property('_id').to.be.equal('key');
+
+          driver.database.collection.restore();
+
+          done();
+        });
+
+      });
+    });
+  });
 });
