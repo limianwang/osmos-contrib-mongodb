@@ -121,4 +121,57 @@ describe('mongodb driver', function() {
       });
     });
   });
+
+  describe('when creating data', function() {
+    var document;
+
+    beforeEach(function() {
+        document = {
+            model: model
+        };
+    });
+
+    it('should catch error returned from collection', function(done) {
+      sinon.stub(driver.database, 'collection', function(bucket) {
+        return {
+          insert: function(spec, callback) {
+            process.nextTick(function() {
+              callback(new Error('fake'));
+            });
+          }
+        };
+      });
+
+      driver.post(document, { _id: 'b' })
+        .catch(function(err) {
+          expect(err).to.exist;
+
+          driver.database.collection.restore();
+
+          done();
+        });
+    });
+
+    it('should yield array of created objects', function(done) {
+      sinon.stub(driver.database, 'collection', function(bucket) {
+        return {
+          insert: function(spec, callback) {
+            process.nextTick(function() {
+              callback(null, [{ _id: 'test', a: 'b' }]);
+            });
+          }
+        };
+      });
+
+      driver.post(document, { _id: 'test' })
+        .then(function() {
+
+          driver.database.collection.restore();
+
+          done();
+        });
+    });
+
+  });
+
 });
